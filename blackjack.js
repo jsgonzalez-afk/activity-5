@@ -10,7 +10,7 @@ let deck = [2,3,4,5,6,7,8,9,10,10,10,10,11,
             2,3,4,5,6,7,8,9,10,10,10,10,11,
             2,3,4,5,6,7,8,9,10,10,10,10,11];
 
-// shuffle
+// Shuffle
 for (let i = deck.length - 1; i > 0; i--) {
   let j = Math.floor(Math.random() * (i + 1));
   let temp = deck[i];
@@ -18,7 +18,7 @@ for (let i = deck.length - 1; i > 0; i--) {
   deck[j] = temp;
 }
 
-// deal
+// Deal
 let playerHand = [];
 let dealerHand = [];
 playerHand.push(deck.pop());
@@ -26,7 +26,6 @@ dealerHand.push(deck.pop());
 playerHand.push(deck.pop());
 dealerHand.push(deck.pop());
 
-// score function
 function calculateScore(hand) {
   let total = 0;
   for (let i = 0; i < hand.length; i++) {
@@ -41,7 +40,6 @@ function calculateScore(hand) {
 let playerScore = calculateScore(playerHand);
 let dealerScore = calculateScore(dealerHand);
 
-// player's turn
 function playerTurn() {
   playerScore = calculateScore(playerHand);
   console.log("\nYour hand:", playerHand, "Score:", playerScore);
@@ -56,40 +54,48 @@ function playerTurn() {
       if (playerScore > 21) {
         console.log("Your hand:", playerHand, "Score:", playerScore);
         console.log("You bust! Dealer wins 😢");
+        losses++; // Incremented losses for a bust
+        console.log(`--- Score: ${wins} Wins, ${losses} Losses, ${ties} Ties ---`);
         rl.close();
       } else {
         playerTurn();
       }
-
     } else {
       dealerTurn();
     }
   });
 }
 
-// dealer's turn
 function dealerTurn() {
   while (dealerScore < 17) {
     dealerHand.push(deck.pop());
     dealerScore = calculateScore(dealerHand);
     console.log("Dealer hits...");
   }
+
   console.log("Dealer's hand:", dealerHand, "Score:", dealerScore);
 
-    if (dealerScore > 21) {
-        console.log("Dealer busts! You win! 🎉");
-        wins++ + 1;
-    } else if (playerScore > dealerScore) {
-        console.log("You win! 🎉");
-        wins++ + 1;
-    } else if (dealerScore > playerScore) {
-        console.log("Dealer wins 😢");
-        losses++ + 1;
-    } else {
-        console.log("It's a tie! 🤝");
-        ties++ + 1;
-    }
-console .log("--- Score:" + wins + " Wins, " + losses + " Losses, " + ties + " Ties ---"); 
+  // --- THE SWITCH STATEMENT ---
+  switch (true) {
+    case (dealerScore > 21):
+      console.log("Dealer busts! You win! 🎉");
+      wins++;
+      break;
+    case (playerScore > dealerScore):
+      console.log("You win! 🎉");
+      wins++;
+      break;
+    case (dealerScore > playerScore):
+      console.log("Dealer wins 😢");
+      losses++;
+      break;
+    default:
+      console.log("It's a tie! 🤝");
+      ties++;
+      break;
+  }
+
+  console.log(`--- Score: ${wins} Wins, ${losses} Losses, ${ties} Ties ---`);
   rl.close();
 }
 
